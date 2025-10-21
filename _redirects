@@ -1,0 +1,16 @@
+# Serve static assets verbatim
+/assets/*           /assets/:splat              200
+# Expose the whole /pages folder as clean routes
+/pages/*            /pages/:splat               200
+
+# Pretty routes that point to the actual HTML files
+/                   /pages/index.html           200
+/app                /pages/app.html             200
+/onboarding         /pages/onboarding.html      200
+/curriculum         /pages/curriculum.html      200
+/settings           /pages/settings.html        200
+/privacy            /pages/privacy.html         200
+/terms              /pages/terms.html           200
+
+# Optional custom 404 page if you add /pages/404.html
+/*                  /pages/404.html             404
