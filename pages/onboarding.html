@@ -2,6 +2,8 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Onboarding · PyTutor</title>
 <link rel="stylesheet" href="/assets/css/styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bitcount+Grid+Single:wght@400;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 </head><body>
 <header class="header"><div class="wrap row">
   <a class="brand" href="/"><span class="title">PyTutor</span></a>
@@ -14,28 +16,22 @@
 
 <main class="wrap panel section" style="margin-top:16px">
   <h2>Tell us about you</h2>
-  <p style="color:var(--muted)">This saves to your browser as form data</p>
+  <p class="mono" style="color:var(--muted)">Saved via serverless function (no API keys on client).</p>
   <form class="form" action="/.netlify/functions/proxy?action=save-profile" method="post" target="saveFrame">
     <div class="grid-3">
       <div class="card">
         <label>Name</label>
         <input class="input" name="name" placeholder="Ada Lovelace">
         <label>Experience</label>
-        <select class="input" name="level">
-          <option>Beginner</option><option>Intermediate</option><option>Advanced</option>
-        </select>
+        <select class="input" name="level"><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select>
         <label>Goal</label>
         <input class="input" name="goal" placeholder="Build apps / data / automation">
       </div>
       <div class="card">
         <label>Preferred pace</label>
-        <select class="input" name="pace">
-          <option>Fast</option><option>Steady</option><option>Gentle</option>
-        </select>
+        <select class="input" name="pace"><option>Fast</option><option>Steady</option><option>Gentle</option></select>
         <label>Focus</label>
-        <select class="input" name="focus">
-          <option>Core Python</option><option>Data</option><option>Automation</option><option>OOP</option>
-        </select>
+        <select class="input" name="focus"><option>Core Python</option><option>Data</option><option>Automation</option><option>OOP</option></select>
         <label>Consent to AI tutor</label>
         <select class="input" name="consent"><option>Yes</option><option>No</option></select>
       </div>
