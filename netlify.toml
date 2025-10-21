@@ -1,0 +1,32 @@
+[build]
+  publish = "."
+  command = "echo Static build"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/"
+  to = "/pages/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/app"
+  to = "/pages/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/onboarding"
+  to = "/pages/onboarding.html"
+  status = 200
+
+[[redirects]]
+  from = "/curriculum"
+  to = "/pages/curriculum.html"
+  status = 200
+
+[[redirects]]
+  from = "/settings"
+  to = "/pages/settings.html"
+  status = 200
