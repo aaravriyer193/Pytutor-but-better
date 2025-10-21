@@ -1,0 +1,61 @@
+/* Google Fonts: Bitcount Grid Single + JetBrains Mono */
+@import url('https://fonts.googleapis.com/css2?family=Bitcount+Grid+Single:wght@400;700&family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+:root{
+  --bg:#f6f8fb; --panel:#fff; --text:#0b1220; --muted:#52607a;
+  --brand:#ff7a1a; --accent:#1e5eff; --border:#e7edf7; --ok:#19a974; --danger:#e04f54;
+  --radius:18px; --shadow:0 22px 44px -18px rgba(13,40,90,.14);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+  letter-spacing:.2px;
+}
+a{color:var(--accent); text-decoration:none}
+a:hover{text-decoration:underline}
+
+.header{position:sticky; top:0; z-index:40; backdrop-filter:saturate(120%) blur(8px);
+  background:linear-gradient(180deg, rgba(255,255,255,.94), rgba(255,255,255,.82));
+  border-bottom:1px solid var(--border);
+}
+.wrap{max-width:1100px; margin-inline:auto; padding:16px 20px}
+.row{display:flex; align-items:center; gap:14px; flex-wrap:wrap}
+.brand{display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text)}
+.title{font-family:"Bitcount Grid Single", system-ui; font-weight:700; letter-spacing:.4px; font-size:1.25rem}
+.pill{padding:8px 12px; border:1px solid var(--border); border-radius:999px; color:var(--muted); background:#fff; display:inline-flex; gap:8px; align-items:center}
+
+.btn{border:none; padding:10px 16px; border-radius:12px; font-weight:700; cursor:pointer; color:#fff; background:linear-gradient(90deg,var(--brand), var(--accent)); box-shadow:var(--shadow)}
+.btn.ghost{background:#fff; color:var(--text); border:1px solid var(--border)}
+
+.hero{max-width:1100px; margin:40px auto 10px; padding:0 20px}
+.card{border:1px solid var(--border); border-radius:18px; background:#fff; box-shadow:var(--shadow); padding:18px}
+.card.pad-lg{padding:32px}
+
+.grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
+@media (max-width:980px){ .grid-3{grid-template-columns:1fr} }
+
+.panel{background:#fff; border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow)}
+.section{padding:16px}
+
+h1,h2,h3,h4{margin:0 0 10px}
+h1{font-family:"Bitcount Grid Single", system-ui; font-size:clamp(32px,4vw,48px)}
+h2,h3{font-family:"Bitcount Grid Single", system-ui}
+code, pre, .mono{font-family:"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New"}
+
+.form{display:grid; gap:12px}
+.input, textarea, select{
+  width:100%; padding:12px 14px; border-radius:12px; border:1px solid var(--border); background:#fff; color:var(--text);
+}
+textarea{min-height:140px}
+.inline{display:flex; gap:10px; flex-wrap:wrap}
+.badge{border:1px solid var(--border); border-radius:999px; padding:6px 10px; color:#0b2f6b; background:#fff; font-size:.9rem}
+
+.table{width:100%; border-collapse:separate; border-spacing:0; overflow:hidden; border-radius:14px; border:1px solid var(--border)}
+.table th,.table td{padding:10px 12px; border-bottom:1px solid var(--border)}
+.table th{background:#f2f6ff; text-align:left; font-weight:700}
+
+.footer{padding:36px 0; color:var(--muted); font-size:.95rem}
+hr{border:0; border-top:1px solid var(--border); margin:16px 0}
