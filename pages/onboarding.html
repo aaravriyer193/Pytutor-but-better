@@ -1,0 +1,53 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Onboarding · PyTutor</title>
+<link rel="stylesheet" href="/assets/css/styles.css">
+</head><body>
+<header class="header"><div class="wrap row">
+  <a class="brand" href="/"><span class="title">PyTutor</span></a>
+  <span class="pill">Onboarding</span>
+  <div style="margin-left:auto" class="inline">
+    <a class="btn ghost" href="/curriculum">Curriculum</a>
+    <a class="btn" href="/app">Continue</a>
+  </div>
+</div></header>
+
+<main class="wrap panel section" style="margin-top:16px">
+  <h2>Tell us about you</h2>
+  <p style="color:var(--muted)">This saves to your browser as form data</p>
+  <form class="form" action="/.netlify/functions/proxy?action=save-profile" method="post" target="saveFrame">
+    <div class="grid-3">
+      <div class="card">
+        <label>Name</label>
+        <input class="input" name="name" placeholder="Ada Lovelace">
+        <label>Experience</label>
+        <select class="input" name="level">
+          <option>Beginner</option><option>Intermediate</option><option>Advanced</option>
+        </select>
+        <label>Goal</label>
+        <input class="input" name="goal" placeholder="Build apps / data / automation">
+      </div>
+      <div class="card">
+        <label>Preferred pace</label>
+        <select class="input" name="pace">
+          <option>Fast</option><option>Steady</option><option>Gentle</option>
+        </select>
+        <label>Focus</label>
+        <select class="input" name="focus">
+          <option>Core Python</option><option>Data</option><option>Automation</option><option>OOP</option>
+        </select>
+        <label>Consent to AI tutor</label>
+        <select class="input" name="consent"><option>Yes</option><option>No</option></select>
+      </div>
+      <div class="card">
+        <h3>Actions</h3>
+        <button class="btn" type="submit">Save Profile</button>
+        <p class="mono" style="color:var(--muted)">Response below:</p>
+        <iframe name="saveFrame" title="Save Response" style="width:100%;height:140px;border:1px solid var(--border);border-radius:10px;background:#fff"></iframe>
+      </div>
+    </div>
+  </form>
+</main>
+
+<footer class="wrap footer"><a href="/privacy">Privacy</a> · <a href="/terms">Terms</a></footer>
+</body></html>
