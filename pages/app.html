@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>App · PyTutor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bitcount+Grid+Single:wght@400;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/styles.css">
+<!-- Pyodide (Python in the browser) -->
+<script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+<style>
+  .layout{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;margin-top:16px}
+  @media (max-width:980px){.layout{grid-template-columns:1fr}}
+  .emu pre{white-space:pre-wrap;border:1px solid var(--border);border-radius:12px;padding:12px;background:#fff}
+  .hp{display:flex;gap:6px;align-items:center}
+  .heart{width:12px;height:12px;border-radius:50%;background:#e04f54;box-shadow:0 0 8px rgba(224,79,84,.6)}
+  .streak{padding:6px 10px;border:1px solid var(--border);border-radius:999px;background:#fff}
+  .xp{padding:6px 10px;border:1px solid var(--border);border-radius:999px;background:#fff}
+  .path{display:grid;gap:10px}
+  .node{display:flex;align-items:center;gap:12px;border:1px solid var(--border);border-radius:14px;background:#fff;padding:12px}
+  .node.done{outline:2px solid #19a974}
+  .node.lock{opacity:.55}
+  .dot{width:14px;height:14px;border-radius:50%;background:linear-gradient(90deg,var(--brand),var(--accent));box-shadow:0 0 10px rgba(76,123,255,.6)}
+  .badge-mini{font-family:"Bitcount Grid Single";font-size:.9rem;color:#0b2f6b}
+  .mono{font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace}
+  .muted{color:var(--muted)}
+</style>
+</head>
+<body>
+<header class="header"><div class="wrap row">
+  <a class="brand" href="/"><span class="title">PyTutor</span></a>
+  <span class="pill">Lessons • Tutor • Emulator</span>
+  <div style="margin-left:auto" class="inline">
+    <a class="btn ghost" href="/curriculum">Curriculum</a>
+    <a class="btn ghost" href="/settings">Settings</a>
+  </div>
+</div></header>
+
+<main class="wrap layout">
+  <!-- LEFT: Learning Path + Guide + Emulator -->
+  <section class="panel section">
+    <div class="inline" style="justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div class="inline" style="gap:10px">
+        <span class="streak" id="streakBadge">🔥 Streak: 0</span>
+        <span class="xp" id="xpBadge">⭐ XP: 0</span>
+        <span class="hp"><span class="heart"></span><span class="heart"></span><span class="heart"></span></span>
+      </div>
+      <form action="/.netlify/functions/proxy?action=export-progress" method="post" target="tutorFrame">
+        <button class="btn ghost" type="submit">Export</button>
+      </form>
+    </div>
+
+    <h2>Learning Path</h2>
+    <div class="path" id="path"></div>
+
+    <hr>
+    <h3 class="badge-mini" id="lessonHdr">Lesson 1 · Print & Variables</h3>
+    <!-- concept guide loads from function -->
+    <form class="form" action="/.netlify/functions/proxy?action=lesson" method="post" target="guideFrame">
+      <div class="inline">
+        <select class="input" name="lesson_id" id="lessonSelect">
+          <option value="1">1. Print & Variables</option>
+          <option value="2">2. Data Types</option>
+          <option value="3">3. Operators</option>
+          <option value="4">4. If / Else</option>
+          <option value="5">5. Loops</option>
+          <option value="6">6. Functions</option>
+          <option value="7">7. Lists & Tuples</option>
+          <option value="8">8. Dictionaries & Sets</option>
+          <option value="9">9. File Handling</option>
+          <option value="10">10. Classes & OOP</option>
+          <option value="11">11. Modules & Packages</option>
+          <option value="12">12. Error Handling</option>
+          <option value="13">13. Final Project</option>
+        </select>
+        <button class="btn" type="submit">Load Guide</button>
+        <button class="btn ghost" id="markCompleteBtn" type="button">Mark Complete</button>
+      </div>
+    </form>
+    <iframe name="guideFrame" title="Guide" style="width:100%;height:280px;border:1px solid var(--border);border-radius:12px;background:#fff;margin-top:10px"></iframe>
+
+    <hr>
+    <h3>Python Emulator (Pyodide)</h3>
+    <div class="emu">
+      <textarea id="pyCode" class="input mono" spellcheck="false" placeholder="# Your Python code here"></textarea>
+      <div class="inline">
+        <button class="btn" id="runBtn" type="button">Run (Ctrl/Cmd+Enter)</button>
+        <button class="btn ghost" id="clearOutBtn" type="button">Clear Output</button>
+        <button class="btn ghost" id="loadStarterBtn" type="button">Load Lesson Starter</button>
+      </div>
+      <pre id="pyOut" class="mono" aria-live="polite"></pre>
+    </div>
+  </section>
+
+  <!-- RIGHT: Tutor + Quiz -->
+  <aside class="panel section">
+    <h3>AI Tutor</h3>
+    <form class="form" action="/.netlify/functions/proxy?action=tutor" method="post" target="tutorFrame">
+      <label class="mono">Your question</label>
+      <textarea name="user_text" id="askInput" placeholder="Explain variables with a tiny example."></textarea>
+      <label>Lesson</label>
+      <select class="input" name="lesson_id" id="askLessonSelect">
+        <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+        <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+        <option value="7">7</option><option value="8">8</option><option value="9">9</option>
+        <option value="10">10</option><option value="11">11</option><option value="12">12</option>
+        <option value="13">13</option>
+      </select>
+      <div class="inline">
+        <button class="btn" type="submit">Ask</button>
+        <button class="btn ghost" formaction="/.netlify/functions/proxy?action=quiz" formmethod="post">Quiz me</button>
+      </div>
+    </form>
+    <p class="muted mono" style="margin:8px 0 6px">Tutor response:</p>
+    <iframe name="tutorFrame" title="Tutor" style="width:100%;height:360px;border:1px solid var(--border);border-radius:12px;background:#fff"></iframe>
+    <hr>
+    <form class="form" action="/.netlify/functions/proxy?action=save-snippet" method="post" target="tutorFrame">
+      <label class="mono">Save code scratchpad to JSON</label>
+      <textarea name="code" id="scratchInput" placeholder="# Optional: paste code here to export"></textarea>
+      <button class="btn ghost" type="submit">Save / Export</button>
+    </form>
+  </aside>
+</main>
+
+<footer class="wrap footer"><a href="/privacy">Privacy</a> · <a href="/terms">Terms</a></footer>
+
+<script>
+/* =========================
+   LEARNING PATH (Duolingo-ish)
+   ========================= */
+const PATH = [
+  {id:1, title:"Print & Variables",    xp:10, starter:`print("Hello, PyTutor!")\nname="Ada"\nage=20\nprint(name, age)`},
+  {id:2, title:"Data Types",           xp:12, starter:`x=42\ny=3.14\nname="Ada"\nis_student=True\nprint(type(x),type(y),type(name),type(is_student))`},
+  {id:3, title:"Operators",            xp:12, starter:`a,b=9,4\nprint(a+b,a-b,a*b,a/b)\nprint(a//b,a%b,a**b)\nprint(a==b,a!=b)`},
+  {id:4, title:"If / Else",            xp:14, starter:`score=82\nif score>=90:\n    print("A")\nelif score>=80:\n    print("B")\nelse:\n    print("Keep going!")`},
+  {id:5, title:"Loops",                xp:16, starter:`for i in range(3):\n  print("loop",i)\ncount=0\nwhile count<3:\n  print("count",count)\n  count+=1`},
+  {id:6, title:"Functions",            xp:16, starter:`def add(a,b):\n  return a+b\nprint(add(2,3))`},
+  {id:7, title:"Lists & Tuples",       xp:16, starter:`nums=[1,2,3]\nnums.append(4)\nprint(nums, nums[0])\ncoords=(10,20)\nprint(coords)`},
+  {id:8, title:"Dictionaries & Sets",  xp:18, starter:`user={"name":"Ada","age":20}\nprint(user["name"])\ntags={"py","ai","py"}\nprint(tags)`},
+  {id:9, title:"File Handling",        xp:18, starter:`with open("notes.txt","w") as f:\n  f.write("Hello file!\\n")\nwith open("notes.txt") as f:\n  print(f.read())`},
+  {id:10,title:"Classes & OOP",        xp:22, starter:`class Person:\n  def __init__(self,name):\n    self.name=name\n  def hello(self):\n    print(f"Hi, I'm {self.name}")\np=Person("Ada"); p.hello()`},
+  {id:11,title:"Modules & Packages",   xp:18, starter:`import math\nprint(math.sqrt(16))`},
+  {id:12,title:"Error Handling",       xp:18, starter:`try:\n  x=int("not_number")\nexcept ValueError as e:\n  print("Oops:",e)`},
+  {id:13,title:"Final Project",        xp:30, starter:`# Plan features → build → iterate\n# Try a tiny CLI To-Do app`}
+];
+
+const STORAGE_KEY = "pt_path_v1";
+const S = {
+  data:{ current:1, completed:[], xp:0, streak:0, lastDay:null },
+  load(){ try{ this.data = JSON.parse(localStorage.getItem(STORAGE_KEY))||this.data }catch{} },
+  save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(this.data)) },
+  day(){ const d=new Date(); return d.toISOString().slice(0,10) },
+  bumpStreak(){ const today=this.day(); if(this.data.lastDay!==today){ this.data.streak += 1; this.data.lastDay=today; } }
+};
+S.load();
+
+// UI refs
+const pathEl = document.getElementById('path');
+const lessonHdr = document.getElementById('lessonHdr');
+const lessonSelect = document.getElementById('lessonSelect');
+const askLessonSelect = document.getElementById('askLessonSelect');
+const streakBadge = document.getElementById('streakBadge');
+const xpBadge = document.getElementById('xpBadge');
+const markBtn = document.getElementById('markCompleteBtn');
+
+// Render Path
+function renderPath(){
+  pathEl.innerHTML = "";
+  PATH.forEach((n) => {
+    const locked = n.id > (S.data.completed.length + 1);
+    const done = S.data.completed.includes(n.id);
+    const div = document.createElement('div');
+    div.className = `node ${done?'done':''} ${locked?'lock':''}`;
+    div.innerHTML = `<div class="dot"></div>
+      <div style="flex:1">
+        <div class="badge-mini">${n.id}. ${n.title}</div>
+        <div class="muted mono">XP ${n.xp}${locked ? ' · Locked' : ''}</div>
+      </div>
+      <button class="btn ghost" ${locked?'disabled':''} data-open="${n.id}">Open</button>`;
+    pathEl.appendChild(div);
+  });
+  pathEl.querySelectorAll('[data-open]').forEach(b=>{
+    b.onclick = ()=>{
+      const id = Number(b.getAttribute('data-open'));
+      setCurrent(id);
+      // Auto-load guide via the form (select + submit programmatically)
+      lessonSelect.value = String(id);
+      lessonHdr.textContent = `Lesson ${id} · ${PATH[id-1].title}`;
+      document.querySelector('form[action$="action=lesson"]').submit();
+    };
+  });
+  // badges
+  streakBadge.textContent = `🔥 Streak: ${S.data.streak}`;
+  xpBadge.textContent = `⭐ XP: ${S.data.xp}`;
+}
+
+function setCurrent(id){
+  S.data.current = id; S.save();
+  askLessonSelect.value = String(id);
+}
+
+function completeCurrent(){
+  const id = S.data.current || 1;
+  if(!S.data.completed.includes(id)){
+    S.data.completed.push(id);
+    S.data.xp += PATH[id-1].xp;
+    S.bumpStreak();
+    S.save();
+    renderPath();
+  }
+}
+
+markBtn.onclick = ()=>{ completeCurrent(); };
+
+// Initialize selection/header
+setCurrent(S.data.current || 1);
+lessonSelect.value = String(S.data.current);
+lessonHdr.textContent = `Lesson ${S.data.current} · ${PATH[S.data.current-1].title}`;
+renderPath();
+
+/* =========================
+   EMULATOR (Pyodide)
+   ========================= */
+const pyOut = document.getElementById('pyOut');
+const pyCode = document.getElementById('pyCode');
+const runBtn = document.getElementById('runBtn');
+const clearOutBtn = document.getElementById('clearOutBtn');
+const loadStarterBtn = document.getElementById('loadStarterBtn');
+
+let pyodideReady = null, pyodide = null;
+async function initPy(){
+  if(pyodideReady) return pyodideReady;
+  pyodideReady = (async()=>{
+    pyodide = await loadPyodide({});
+    return pyodide;
+  })();
+  return pyodideReady;
+}
+function appendOut(s){ pyOut.textContent += s; }
+function appendErr(s){ pyOut.textContent += s; }
+
+async function runCode(){
+  await initPy();
+  pyOut.textContent = '';
+  try{
+    pyodide.setStdout({batched: appendOut});
+    pyodide.setStderr({batched: appendErr});
+    await pyodide.runPythonAsync(pyCode.value);
+  }catch(e){ appendErr(`\n[Error] ${e}\n`); }
+}
+runBtn.onclick = runCode;
+document.addEventListener('keydown', e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){ e.preventDefault(); runBtn.click(); }
+});
+clearOutBtn.onclick = ()=>{ pyOut.textContent=''; };
+loadStarterBtn.onclick = ()=>{
+  const id = S.data.current || 1;
+  pyCode.value = PATH[id-1].starter || '';
+};
+
+/* prefill scratch export from emulator for convenience */
+document.getElementById('scratchInput').value =
+`# PyTutor scratch ${new Date().toISOString()}
+# Current lesson: ${S.data.current} - ${PATH[S.data.current-1].title}
+`;
+</script>
+</body>
+</html>
