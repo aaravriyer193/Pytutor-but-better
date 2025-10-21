@@ -1,0 +1,43 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Settings · PyTutor</title>
+<link rel="stylesheet" href="/assets/css/styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bitcount+Grid+Single:wght@400;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+</head><body>
+<header class="header"><div class="wrap row">
+  <a class="brand" href="/"><span class="title">PyTutor</span></a>
+  <span class="pill">Settings</span>
+  <div style="margin-left:auto" class="inline">
+    <a class="btn ghost" href="/app">App</a>
+  </div>
+</div></header>
+
+<main class="wrap panel section" style="margin-top:16px">
+  <h2>Export / Import</h2>
+  <div class="grid-3">
+    <div class="card">
+      <h3>Export Progress</h3>
+      <form class="form" action="/.netlify/functions/proxy?action=export-progress" method="post" target="setFrame">
+        <button class="btn" type="submit">Export to JSON</button>
+      </form>
+    </div>
+    <div class="card">
+      <h3>Import Progress</h3>
+      <form class="form" action="/.netlify/functions/proxy?action=import-progress" method="post" enctype="multipart/form-data" target="setFrame">
+        <input class="input" type="file" name="file">
+        <button class="btn" type="submit">Import</button>
+      </form>
+    </div>
+    <div class="card">
+      <h3>Reset</h3>
+      <form class="form" action="/.netlify/functions/proxy?action=reset-progress" method="post" target="setFrame">
+        <button class="btn ghost" type="submit">Reset</button>
+      </form>
+    </div>
+  </div>
+  <iframe name="setFrame" title="Settings" style="width:100%;height:160px;border:1px solid var(--border);border-radius:12px;background:#fff;margin-top:14px"></iframe>
+</main>
+
+<footer class="wrap footer"><a href="/privacy">Privacy</a> · <a href="/terms">Terms</a></footer>
+</body></html>
